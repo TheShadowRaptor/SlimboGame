@@ -24,7 +24,7 @@ export class Character {
         this.yDisplace = 0;
 
         // construct the sprite and position on stage
-        this._sprite = assetManager.getSprite("sprites", animation, 300, 300);
+        this._sprite = assetManager.getSprite("spritesA", animation, 50, 600);
     }
 
     // --------------------------------------------------- get/sets
@@ -44,13 +44,13 @@ export class Character {
     }
 
     // --------------------------------------------------- protected method
-    protected toRadians(degrees:number):number {
-        return degrees * (Math.PI / 180);
-    }
+    // protected toRadians(degrees:number):number {
+    //     return degrees * (Math.PI / 180);
+    // }
 
-    protected toDegrees(radians:number):number {
-        return radians * (180 / Math.PI);
-    }
+    // protected toDegrees(radians:number):number {
+    //     return radians * (180 / Math.PI);
+    // }
 
     // --------------------------------------------------- public methods
     public showMe():void {
@@ -71,10 +71,10 @@ export class Character {
         if (this._state == Character.STATE_DEAD) return;
 
         // calculate how much x and y to move sprite?
-        let radians:number = this.toRadians(this._sprite.rotation);
+        // let radians:number = this.toRadians(this._sprite.rotation);
 
-        this.xDisplace = Math.cos(radians) * this._speed;
-        this.yDisplace = Math.sin(radians) * this._speed;
+        // this.xDisplace = Math.cos(radians) * this._speed;
+        // this.yDisplace = Math.sin(radians) * this._speed;
 
         this._sprite.play();        
         this._state = Character.STATE_MOVING;
@@ -91,8 +91,8 @@ export class Character {
         if ((this._state == Character.STATE_DEAD) || (this._state == Character.STATE_IDLE)) return;
 
         // move the sprite by the x and y displacement
-        this._sprite.x += this.xDisplace;
-        this._sprite.y += this.yDisplace;
+        // this._sprite.x += this.xDisplace;
+        // this._sprite.y += this.yDisplace;
     }
 
 }

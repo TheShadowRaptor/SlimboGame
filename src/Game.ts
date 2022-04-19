@@ -4,8 +4,10 @@
 // importing createjs framework
 import "createjs";
 // importing game constants
-import { STAGE_WIDTH, STAGE_HEIGHT, FRAME_RATE, ASSET_MANIFEST } from "./Constants";
+import { STAGE_WIDTH, STAGE_HEIGHT, FRAME_RATE, ASSET_MANIFEST, TILE_MAX } from "./Constants";
 import { AssetManager } from "./AssetManager";
+import { Player } from "./Player";
+import { Tile } from "./Tile";
 
 // game variables
 let stage:createjs.StageGL;
@@ -13,15 +15,33 @@ let canvas:HTMLCanvasElement;
 let assetManager:AssetManager;
 
 // game objects
+let player:Player;
+let tile:Tile;
 let background:createjs.Sprite;
 
 // --------------------------------------------------- event handler
 function onReady(e:createjs.Event):void {
     console.log(">> spritesheet loaded – ready to add sprites to game");
-
+    
     // construct game objects here
     background = assetManager.getSprite("spritesB", "TilesetSpritesheet/Background/Background");
     stage.addChild(background);
+    
+    player = new Player(stage, assetManager);
+    player.showMe();
+    player.startMe();
+    
+    let xPos:number;
+    let yPos:number;
+
+    for (let i:number = 0; i < TILE_MAX; i++) {
+        
+        yPos = 660;
+        xPos =+ 64;
+        
+        tile = new Tile(stage, xPos, yPos, assetManager)
+        tile.showMe();
+    }
 
     // startup the ticker
     createjs.Ticker.framerate = FRAME_RATE;
@@ -38,6 +58,7 @@ function onTick(e:createjs.Event) {
     document.getElementById("fps").innerHTML = String(createjs.Ticker.getMeasuredFPS());
 
     // this is your game loop!
+    player.update();
 
     // update the stage
     stage.update();

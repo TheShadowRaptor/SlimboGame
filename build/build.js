@@ -1045,6 +1045,73 @@ exports.AssetManager = AssetManager;
 
 /***/ }),
 
+/***/ "./src/Character.ts":
+/*!**************************!*\
+  !*** ./src/Character.ts ***!
+  \**************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Character = void 0;
+class Character {
+    constructor(stage, assetManager, animation) {
+        this._state = Character.STATE_IDLE;
+        this.stage = stage;
+        this.xDisplace = 0;
+        this.yDisplace = 0;
+        this._sprite = assetManager.getSprite("spritesA", animation, 50, 600);
+    }
+    set speed(value) {
+        this._speed = value;
+    }
+    get speed() {
+        return this._speed;
+    }
+    get state() {
+        return this._state;
+    }
+    get sprite() {
+        return this._sprite;
+    }
+    showMe() {
+        this.stage.addChild(this._sprite);
+    }
+    hideMe() {
+        this._sprite.stop();
+        this.stage.removeChild(this._sprite);
+    }
+    rotateMe(degrees) {
+        if (this._state == Character.STATE_DEAD)
+            return;
+        this._sprite.rotation = degrees;
+    }
+    startMe() {
+        if (this._state == Character.STATE_DEAD)
+            return;
+        this._sprite.play();
+        this._state = Character.STATE_MOVING;
+    }
+    stopMe() {
+        if (this._state == Character.STATE_DEAD)
+            return;
+        this._sprite.stop();
+        this._state = Character.STATE_IDLE;
+    }
+    update() {
+        if ((this._state == Character.STATE_DEAD) || (this._state == Character.STATE_IDLE))
+            return;
+    }
+}
+exports.Character = Character;
+Character.STATE_IDLE = 1;
+Character.STATE_MOVING = 2;
+Character.STATE_DEAD = 3;
+
+
+/***/ }),
+
 /***/ "./src/Constants.ts":
 /*!**************************!*\
   !*** ./src/Constants.ts ***!
@@ -1054,10 +1121,11 @@ exports.AssetManager = AssetManager;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ASSET_MANIFEST = exports.FRAME_RATE = exports.STAGE_HEIGHT = exports.STAGE_WIDTH = void 0;
+exports.ASSET_MANIFEST = exports.TILE_MAX = exports.FRAME_RATE = exports.STAGE_HEIGHT = exports.STAGE_WIDTH = void 0;
 exports.STAGE_WIDTH = 1280;
 exports.STAGE_HEIGHT = 720;
 exports.FRAME_RATE = 30;
+exports.TILE_MAX = 10;
 exports.ASSET_MANIFEST = [
     {
         type: "json",
@@ -1073,13 +1141,13 @@ exports.ASSET_MANIFEST = [
     },
     {
         type: "json",
-        src: "./lib/TilesetSpritesheet/sprites.json",
+        src: "./lib/TilesetSpritesheet/sprites_T.json",
         id: "spritesB",
         data: 0
     },
     {
         type: "image",
-        src: "./lib/TilesetSpritesheet/sprites.png",
+        src: "./lib/TilesetSpritesheet/sprites_T.png",
         id: "spritesB",
         data: 0
     },
@@ -1112,14 +1180,29 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 __webpack_require__(/*! createjs */ "./node_modules/createjs/builds/1.0.0/createjs.min.js");
 const Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 const AssetManager_1 = __webpack_require__(/*! ./AssetManager */ "./src/AssetManager.ts");
+const Player_1 = __webpack_require__(/*! ./Player */ "./src/Player.ts");
+const Tile_1 = __webpack_require__(/*! ./Tile */ "./src/Tile.ts");
 let stage;
 let canvas;
 let assetManager;
+let player;
+let tile;
 let background;
 function onReady(e) {
     console.log(">> spritesheet loaded – ready to add sprites to game");
     background = assetManager.getSprite("spritesB", "TilesetSpritesheet/Background/Background");
     stage.addChild(background);
+    player = new Player_1.Player(stage, assetManager);
+    player.showMe();
+    player.startMe();
+    let xPos;
+    let yPos;
+    for (let i = 0; i < Constants_1.TILE_MAX; i++) {
+        yPos = 660;
+        xPos = +64;
+        tile = new Tile_1.Tile(stage, xPos, yPos, assetManager);
+        tile.showMe();
+    }
     createjs.Ticker.framerate = Constants_1.FRAME_RATE;
     createjs.Ticker.on("tick", onTick);
     console.log(">> game ready");
@@ -1128,6 +1211,7 @@ function onMoveSnake(e) {
 }
 function onTick(e) {
     document.getElementById("fps").innerHTML = String(createjs.Ticker.getMeasuredFPS());
+    player.update();
     stage.update();
 }
 function main() {
@@ -1140,6 +1224,97 @@ function main() {
     assetManager.loadAssets(Constants_1.ASSET_MANIFEST);
 }
 main();
+
+
+/***/ }),
+
+/***/ "./src/Player.ts":
+/*!***********************!*\
+  !*** ./src/Player.ts ***!
+  \***********************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Player = void 0;
+const Character_1 = __webpack_require__(/*! ./Character */ "./src/Character.ts");
+class Player extends Character_1.Character {
+    constructor(stage, assetManager) {
+        super(stage, assetManager, "CharacterSpritesheet/Player/RightIdle");
+    }
+    update() {
+        super.update();
+        super.startMe();
+    }
+}
+exports.Player = Player;
+
+
+/***/ }),
+
+/***/ "./src/Tile.ts":
+/*!*********************!*\
+  !*** ./src/Tile.ts ***!
+  \*********************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Tile = void 0;
+const Tileset_1 = __webpack_require__(/*! ./Tileset */ "./src/Tileset.ts");
+class Tile extends Tileset_1.Tileset {
+    constructor(stage, x, y, assetManager) {
+        super(stage, x, y, assetManager, "TilesetSpritesheet/Ground/TopMid");
+    }
+    update() {
+        super.update();
+    }
+}
+exports.Tile = Tile;
+
+
+/***/ }),
+
+/***/ "./src/Tileset.ts":
+/*!************************!*\
+  !*** ./src/Tileset.ts ***!
+  \************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Tileset = void 0;
+class Tileset {
+    constructor(stage, x, y, assetManager, animation) {
+        this.stage = stage;
+        this._sprite = assetManager.getSprite("spritesB", animation, x, y);
+    }
+    get sprite() {
+        return this._sprite;
+    }
+    showMe() {
+        this.stage.addChild(this._sprite);
+    }
+    hideMe() {
+        this._sprite.stop();
+        this.stage.removeChild(this._sprite);
+    }
+    update() {
+    }
+}
+exports.Tileset = Tileset;
+Tileset.STATE_TOPLEFT = 1;
+Tileset.STATE_TOPMID = 2;
+Tileset.STATE_TOPRIGHT = 3;
+Tileset.STATE_MIDLEFT = 4;
+Tileset.STATE_MIDMID = 5;
+Tileset.STATE_MIDRIGHT = 6;
+Tileset.STATE_BOTLEFT = 7;
+Tileset.STATE_BOTMID = 8;
+Tileset.STATE_BOTRIGHT = 9;
 
 
 /***/ }),
@@ -3475,7 +3650,7 @@ module.exports.formatError = function (err) {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("4e5cc1af9ac067ed677f")
+/******/ 		__webpack_require__.h = () => ("f4fe9bd5db00d92c708e")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
