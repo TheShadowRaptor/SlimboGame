@@ -6,8 +6,6 @@ import "createjs";
 // importing game constants
 import { STAGE_WIDTH, STAGE_HEIGHT, FRAME_RATE, ASSET_MANIFEST } from "./Constants";
 import { AssetManager } from "./AssetManager";
-import { Snake } from "./Snake";
-import { Bug } from "./Bug";
 
 // game variables
 let stage:createjs.StageGL;
@@ -15,8 +13,6 @@ let canvas:HTMLCanvasElement;
 let assetManager:AssetManager;
 
 // game objects
-let snake:Snake;
-let bug:Bug;
 let background:createjs.Sprite;
 
 // --------------------------------------------------- event handler
@@ -24,19 +20,8 @@ function onReady(e:createjs.Event):void {
     console.log(">> spritesheet loaded – ready to add sprites to game");
 
     // construct game objects here
-    background = assetManager.getSprite("sprites", "misc/backgroundGame");
+    background = assetManager.getSprite("spritesB", "TilesetSpritesheet/Background/Background");
     stage.addChild(background);
-
-    snake = new Snake(stage, assetManager);
-    snake.showMe();
-    snake.startSlowDown();
-
-    bug = new Bug(stage, assetManager, snake);
-    // bug.rotateMe(225);
-    bug.showMe();
-    // bug.startMe();
-
-    stage.on("mousedown", onMoveSnake);
 
     // startup the ticker
     createjs.Ticker.framerate = FRAME_RATE;
@@ -45,8 +30,7 @@ function onReady(e:createjs.Event):void {
 }
 
 function onMoveSnake(e:createjs.Event):void {
-    snake.rotateMe();
-    snake.startMe();
+
 }
 
 function onTick(e:createjs.Event) {
@@ -54,8 +38,6 @@ function onTick(e:createjs.Event) {
     document.getElementById("fps").innerHTML = String(createjs.Ticker.getMeasuredFPS());
 
     // this is your game loop!
-    snake.update();
-    bug.update();
 
     // update the stage
     stage.update();

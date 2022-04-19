@@ -1,33 +1,31 @@
 // game constants
-export const STAGE_WIDTH:number = 600;
-export const STAGE_HEIGHT:number = 600;
+export const STAGE_WIDTH:number = 1280;
+export const STAGE_HEIGHT:number = 720;
 export const FRAME_RATE:number = 30;
-export const SNAKE_MAX_SPEED:number = 5;
-export const SNAKE_SLOW_DELAY:number = 5000;
 
 export const ASSET_MANIFEST:Object[] = [
     {
         type:"json",
         src:"./lib/CharacterSpritesheet/sprites.json",
-        id:"sprites",
+        id:"spritesA",
         data:0
     },
     {
         type:"image",
         src:"./lib/CharacterSpritesheet/sprites.png",
-        id:"sprites",
+        id:"spritesA",
         data:0
     },
     {
         type:"json",
         src:"./lib/TilesetSpritesheet/sprites.json",
-        id:"sprites",
+        id:"spritesB",
         data:0
     },
     {
         type:"image",
         src:"./lib/TilesetSpritesheet/sprites.png",
-        id:"sprites",
+        id:"spritesB",
         data:0
     },
     {

@@ -1,4 +1,3 @@
-import { SNAKE_MAX_SPEED } from "./Constants";
 import { AssetManager } from "./AssetManager";
 
 export class Character {
@@ -19,7 +18,6 @@ export class Character {
 
     constructor(stage:createjs.StageGL, assetManager:AssetManager, animation:string) {
         // initialization
-        this._speed = SNAKE_MAX_SPEED;
         this._state = Character.STATE_IDLE;
         this.stage = stage;
         this.xDisplace = 0;
