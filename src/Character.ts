@@ -1,4 +1,5 @@
 import { AssetManager } from "./AssetManager";
+import { GRAVITY_POWER } from "./Constants";
 
 export class Character {
     // state class constants
@@ -13,15 +14,11 @@ export class Character {
 
     // protected variable
     protected stage:createjs.StageGL;
-    protected xDisplace:number;
-    protected yDisplace:number;
 
     constructor(stage:createjs.StageGL, assetManager:AssetManager, animation:string) {
         // initialization
         this._state = Character.STATE_IDLE;
         this.stage = stage;
-        this.xDisplace = 0;
-        this.yDisplace = 0;
 
         // construct the sprite and position on stage
         this._sprite = assetManager.getSprite("spritesA", animation, 50, 600);
@@ -44,13 +41,11 @@ export class Character {
     }
 
     // --------------------------------------------------- protected method
-    // protected toRadians(degrees:number):number {
-    //     return degrees * (Math.PI / 180);
-    // }
 
-    // protected toDegrees(radians:number):number {
-    //     return radians * (180 / Math.PI);
-    // }
+    protected gravity(): void{
+        
+        this._sprite.y = this._sprite.y + GRAVITY_POWER;
+    }
 
     // --------------------------------------------------- public methods
     public showMe():void {
@@ -70,12 +65,6 @@ export class Character {
     public startMe():void {
         if (this._state == Character.STATE_DEAD) return;
 
-        // calculate how much x and y to move sprite?
-        // let radians:number = this.toRadians(this._sprite.rotation);
-
-        // this.xDisplace = Math.cos(radians) * this._speed;
-        // this.yDisplace = Math.sin(radians) * this._speed;
-
         this._sprite.play();        
         this._state = Character.STATE_MOVING;
     }
@@ -89,10 +78,8 @@ export class Character {
 
     public update():void {
         if ((this._state == Character.STATE_DEAD) || (this._state == Character.STATE_IDLE)) return;
+        this.gravity();
 
-        // move the sprite by the x and y displacement
-        // this._sprite.x += this.xDisplace;
-        // this._sprite.y += this.yDisplace;
     }
 
 }

@@ -49,7 +49,8 @@ function onReady(e:createjs.Event):void {
     console.log(">> game ready");
 }
 
-function onMoveSnake(e:createjs.Event):void {
+function monitorCollisions():void {
+    // if ()
 
 }
 
