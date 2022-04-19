@@ -1,0 +1,74 @@
+{
+
+"images": [
+    "TileSprites.png"
+],
+
+"framerate": 30,
+"frames": [
+    [1, 1, 3, 3, 0, 0, 0],
+    [6, 1, 64, 64, 0, 0, 0],
+    [72, 1, 64, 64, 0, 0, 0],
+    [138, 1, 64, 64, 0, 0, 0],
+    [204, 1, 64, 64, 0, 0, 0],
+    [270, 1, 64, 64, 0, 0, 0],
+    [336, 1, 64, 64, 0, 0, 0],
+    [402, 1, 64, 64, 0, 0, 0],
+    [468, 1, 64, 64, 0, 0, 0],
+    [534, 1, 64, 64, 0, 0, 0],
+    [600, 1, 64, 64, 0, 0, 0],
+    [666, 1, 64, 64, 0, 0, 0],
+    [732, 1, 64, 64, 0, 0, 0],
+    [798, 1, 64, 64, 0, 0, 0],
+    [864, 1, 64, 64, 0, 0, 0],
+    [864, 1, 64, 64, 0, 0, 0],
+    [930, 1, 64, 61, 0, 0, -3],
+    [930, 1, 64, 61, 0, 0, -3],
+    [930, 1, 64, 61, 0, 0, -3],
+    [930, 1, 64, 61, 0, 0, -3],
+    [996, 1, 64, 64, 0, 0, 0],
+    [1062, 1, 64, 64, 0, 0, 0],
+    [1062, 1, 64, 64, 0, 0, 0],
+    [1128, 1, 64, 64, 0, 0, 0],
+    [1128, 1, 64, 64, 0, 0, 0],
+    [1194, 1, 64, 64, 0, 0, 0],
+    [1260, 1, 64, 64, 0, 0, 0],
+    [1260, 1, 64, 64, 0, 0, 0],
+    [1326, 1, 64, 64, 0, 0, 0],
+    [1326, 1, 64, 64, 0, 0, 0],
+    [1392, 1, 64, 64, 0, 0, 0],
+    [1392, 1, 64, 64, 0, 0, 0],
+    [1458, 1, 64, 64, 0, 0, 0],
+    [1458, 1, 64, 64, 0, 0, 0],
+    [1524, 1, 64, 64, 0, 0, 0],
+    [1, 67, 1280, 720, 0, 0, 0]
+],
+
+"animations": {
+    "TilesetSpritesheet/InteractableBlocks/BrickBroken": { "frames": [14, 15, 16, 17, 18, 19, 0] },
+    "TilesetSpritesheet/Ground/BotLeft": { "frames": [1] },
+    "TilesetSpritesheet/Ground/BotLeftCorner": { "frames": [2] },
+    "TilesetSpritesheet/Ground/BotMid": { "frames": [3] },
+    "TilesetSpritesheet/Ground/BotRight": { "frames": [4] },
+    "TilesetSpritesheet/Ground/BotRightCorner": { "frames": [5] },
+    "TilesetSpritesheet/Ground/MidLeft": { "frames": [6] },
+    "TilesetSpritesheet/Ground/MidMid": { "frames": [7] },
+    "TilesetSpritesheet/Ground/MidRight": { "frames": [8] },
+    "TilesetSpritesheet/Ground/TopLeft": { "frames": [9] },
+    "TilesetSpritesheet/Ground/TopLeftCorner": { "frames": [10] },
+    "TilesetSpritesheet/Ground/TopMid": { "frames": [11] },
+    "TilesetSpritesheet/Ground/TopRight": { "frames": [12] },
+    "TilesetSpritesheet/Ground/TopRightCorner": { "frames": [13] },
+    "TilesetSpritesheet/InteractableBlocks/BrickUnbroken_": { "frames": [20] },
+    "TilesetSpritesheet/InteractableBlocks/Deactive_": { "frames": [21] },
+    "TilesetSpritesheet/InteractableBlocks/ItemBlockDeactive_": { "frames": [22] },
+    "TilesetSpritesheet/InteractableBlocks/ItemBlockActive": { "frames": [23, 24, 30, 31, 32, 33, 34, 25, 26, 27, 28, 29] },
+    "TilesetSpritesheet/Background/Background": { "frames": [35] }
+},
+
+"texturepacker": [
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:bb1ab1f640597737ed0c3043402cbfcc:3897621b4234c4c2f026a413b517bbc4:de3a8e3141863d169598f7ec6d66b027$",
+        "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
+]
+
+}
