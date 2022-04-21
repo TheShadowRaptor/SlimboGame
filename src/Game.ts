@@ -8,6 +8,8 @@ import { STAGE_WIDTH, STAGE_HEIGHT, FRAME_RATE, ASSET_MANIFEST, TILE_MAX } from 
 import { AssetManager } from "./AssetManager";
 import { Player } from "./Player";
 import { Tile } from "./Tile";
+import { boxHit } from "./Toolkit";
+import { Character } from "./Character";
 
 // game variables
 let stage:createjs.StageGL;
@@ -18,6 +20,9 @@ let assetManager:AssetManager;
 let player:Player;
 let tile:Tile;
 let background:createjs.Sprite;
+
+// variables
+let spaceKey:boolean = false;
 
 // --------------------------------------------------- event handler
 function onReady(e:createjs.Event):void {
@@ -43,15 +48,35 @@ function onReady(e:createjs.Event):void {
         tile.showMe();
     }
 
+    // listener for keyboard keys
+    document.onkeydown = onKeyDown;  
+
+    // listen for custom game events
+
     // startup the ticker
     createjs.Ticker.framerate = FRAME_RATE;
     createjs.Ticker.on("tick", onTick);        
     console.log(">> game ready");
 }
 
-function monitorCollisions():void {
-    // if ()
+function onKeyDown(e:KeyboardEvent):void {
+    // console.log("key has been pressed down: " + e.key);
+    if (e.key == " ") spaceKey = true;
+}
 
+function monitorKeys():void {
+    if (spaceKey) {
+        console.log("jumping trigger");
+        player.isJumping();
+        player.startMe();
+        spaceKey = false;
+    }
+}
+
+function monitorCollisions():void {
+    if (boxHit(player.sprite, tile.sprite)){
+        player.isGrounded();
+    }
 }
 
 function onTick(e:createjs.Event) {
@@ -59,6 +84,8 @@ function onTick(e:createjs.Event) {
     document.getElementById("fps").innerHTML = String(createjs.Ticker.getMeasuredFPS());
 
     // this is your game loop!
+    monitorCollisions();
+    monitorKeys();
     player.update();
 
     // update the stage

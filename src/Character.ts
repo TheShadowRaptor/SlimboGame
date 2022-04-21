@@ -1,11 +1,16 @@
 import { AssetManager } from "./AssetManager";
-import { GRAVITY_POWER } from "./Constants";
 
 export class Character {
     // state class constants
-    public static STATE_IDLE:number = 1;
-    public static STATE_MOVING:number = 2;
-    public static STATE_DEAD:number = 3;
+    public static STATE_IDLE_RIGHT:number = 1;
+    public static STATE_IDLE_LEFT:number = 2;
+    public static STATE_MOVING_RIGHT:number = 3;
+    public static STATE_MOVING_LEFT:number = 4;
+    public static STATE_JUMPING:number = 5;
+    public static STATE_FALLING:number = 6;
+    public static STATE_GROUNDED:number = 7;
+    public static STATE_DYING:number = 8;
+    public static STATE_DEAD:number = 9;
 
     // protected property variables
     protected _speed:number;
@@ -15,13 +20,17 @@ export class Character {
     // protected variable
     protected stage:createjs.StageGL;
 
+    // public variable
+    public onGround:boolean;
+
     constructor(stage:createjs.StageGL, assetManager:AssetManager, animation:string) {
         // initialization
-        this._state = Character.STATE_IDLE;
+        this._state = Character.STATE_IDLE_RIGHT;
         this.stage = stage;
+        this.onGround = false;
 
         // construct the sprite and position on stage
-        this._sprite = assetManager.getSprite("spritesA", animation, 50, 600);
+        this._sprite = assetManager.getSprite("spritesA", animation, 50, 500);
     }
 
     // --------------------------------------------------- get/sets
@@ -42,12 +51,7 @@ export class Character {
 
     // --------------------------------------------------- protected method
 
-    protected gravity(): void{
-        
-        this._sprite.y = this._sprite.y + GRAVITY_POWER;
-    }
-
-    // --------------------------------------------------- public methods
+    // --------------------------------------------------- public methods  
     public showMe():void {
         this.stage.addChild(this._sprite);
     }
@@ -66,19 +70,17 @@ export class Character {
         if (this._state == Character.STATE_DEAD) return;
 
         this._sprite.play();        
-        this._state = Character.STATE_MOVING;
     }
 
     public stopMe():void {
         if (this._state == Character.STATE_DEAD) return;
 
         this._sprite.stop();
-        this._state = Character.STATE_IDLE;
+        // this._state = Character.STATE_IDLERIGHT;
     }
 
     public update():void {
-        if ((this._state == Character.STATE_DEAD) || (this._state == Character.STATE_IDLE)) return;
-        this.gravity();
+        if ((this._state == Character.STATE_DEAD) || (this._state == Character.STATE_IDLE_RIGHT) || (this._state == Character.STATE_IDLE_LEFT)) return;
 
     }
 
