@@ -18,12 +18,12 @@ export class Tileset{
     // protected variable
     protected stage:createjs.StageGL;
 
-    constructor(stage:createjs.StageGL, x:number, y:number, assetManager:AssetManager, animation:string) {
+    constructor(stage:createjs.StageGL, assetManager:AssetManager, animation:string) {
         // initialization
         this.stage = stage;
 
         // construct the sprite and position on stage
-        this._sprite = assetManager.getSprite("spritesB", animation, x, y);
+        this._sprite = assetManager.getSprite("spritesB", animation);
     }
 
     // --------------------------------------------------- get/sets

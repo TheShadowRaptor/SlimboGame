@@ -19,10 +19,16 @@ let assetManager:AssetManager;
 // game objects
 let player:Player;
 let tile:Tile;
+let tile2:Tile;
+let tile3:Tile;
 let background:createjs.Sprite;
 
 // variables
+
+// control variables
 let spaceKey:boolean = false;
+export let leftKey:boolean = false;
+export let rightKey:boolean = false;
 
 // --------------------------------------------------- event handler
 function onReady(e:createjs.Event):void {
@@ -34,22 +40,33 @@ function onReady(e:createjs.Event):void {
     
     player = new Player(stage, assetManager);
     player.showMe();
-    player.startMe();
     
     let xPos:number;
     let yPos:number;
+      
+    yPos = 600;
+    xPos = 0;
+    
+    tile = new Tile(stage, assetManager)
+    tile.positionMe(xPos, yPos);
+    tile.showMe();
+    
+    xPos = xPos + 64;
+    
+    tile2 = new Tile(stage, assetManager)
+    tile2.positionMe(xPos, yPos);
+    tile2.showMe();
 
-    for (let i:number = 0; i < TILE_MAX; i++) {
-        
-        yPos = 660;
-        xPos =+ 64;
-        
-        tile = new Tile(stage, xPos, yPos, assetManager)
-        tile.showMe();
-    }
+    xPos = xPos + 64;
+    
+    tile3 = new Tile(stage, assetManager)
+    tile3.positionMe(xPos, yPos);
+    tile3.showMe();
+
 
     // listener for keyboard keys
     document.onkeydown = onKeyDown;  
+    document.onkeyup = onKeyUp;
 
     // listen for custom game events
 
@@ -62,19 +79,51 @@ function onReady(e:createjs.Event):void {
 function onKeyDown(e:KeyboardEvent):void {
     // console.log("key has been pressed down: " + e.key);
     if (e.key == " ") spaceKey = true;
+
+    else if (e.key == 'a') leftKey = true;
+
+    else if (e.key == 'd') rightKey = true;
+}
+
+function onKeyUp(e:KeyboardEvent):void {
+    if (e.key == " ") spaceKey = false;
+
+    else if (e.key == 'a') leftKey = false;
+
+    else if (e.key == 'd') rightKey = false;
 }
 
 function monitorKeys():void {
     if (spaceKey) {
-        console.log("jumping trigger");
         player.isJumping();
-        player.startMe();
         spaceKey = false;
     }
+
+    else if (leftKey){
+        player.direction = Player.LEFT;
+        player.moveMe();
+        leftKey = false;
+    }
+
+    else if (rightKey){
+        player.direction = Player.RIGHT;
+        player.moveMe();
+        rightKey = false;
+    }
+
+    else player.stopMe();
 }
 
 function monitorCollisions():void {
     if (boxHit(player.sprite, tile.sprite)){
+        player.isGrounded();
+    }
+
+    else if (boxHit(player.sprite, tile2.sprite)){
+        player.isGrounded();
+    }
+
+    else if (boxHit(player.sprite, tile3.sprite)){
         player.isGrounded();
     }
 }

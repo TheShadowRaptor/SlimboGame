@@ -1057,7 +1057,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Character = void 0;
 class Character {
     constructor(stage, assetManager, animation) {
-        this._state = Character.STATE_IDLE_RIGHT;
+        this._state = Character.STATE_IDLE;
         this.stage = stage;
         this.onGround = false;
         this._sprite = assetManager.getSprite("spritesA", animation, 50, 500);
@@ -1068,7 +1068,16 @@ class Character {
     get speed() {
         return this._speed;
     }
+    set direction(value) {
+        this._direction = value;
+    }
+    get direction() {
+        return this._direction;
+    }
     get state() {
+        return this._state;
+    }
+    get movingState() {
         return this._state;
     }
     get sprite() {
@@ -1086,31 +1095,40 @@ class Character {
             return;
         this._sprite.rotation = degrees;
     }
-    startMe() {
+    moveMe() {
         if (this._state == Character.STATE_DEAD)
             return;
-        this._sprite.play();
+        if (this._movingState = Character.STATE_IDLE) {
+            this._movingState = Character.STATE_MOVING;
+            this._sprite.play();
+        }
     }
     stopMe() {
         if (this._state == Character.STATE_DEAD)
             return;
-        this._sprite.stop();
+        if (this._movingState = Character.STATE_MOVING) {
+            this._movingState = Character.STATE_IDLE;
+            this._movingState = Character.STATE_IDLE;
+            this._sprite.stop();
+        }
     }
     update() {
-        if ((this._state == Character.STATE_DEAD) || (this._state == Character.STATE_IDLE_RIGHT) || (this._state == Character.STATE_IDLE_LEFT))
+        if ((this._state == Character.STATE_DEAD) || (this._state == Character.STATE_IDLE))
             return;
     }
 }
 exports.Character = Character;
-Character.STATE_IDLE_RIGHT = 1;
-Character.STATE_IDLE_LEFT = 2;
-Character.STATE_MOVING_RIGHT = 3;
-Character.STATE_MOVING_LEFT = 4;
-Character.STATE_JUMPING = 5;
-Character.STATE_FALLING = 6;
-Character.STATE_GROUNDED = 7;
-Character.STATE_DYING = 8;
-Character.STATE_DEAD = 9;
+Character.UP = 1;
+Character.DOWN = 2;
+Character.LEFT = 3;
+Character.RIGHT = 4;
+Character.STATE_IDLE = 1;
+Character.STATE_MOVING = 2;
+Character.STATE_JUMPING = 3;
+Character.STATE_FALLING = 4;
+Character.STATE_GROUNDED = 5;
+Character.STATE_DYING = 6;
+Character.STATE_DEAD = 7;
 
 
 /***/ }),
@@ -1181,6 +1199,7 @@ exports.ASSET_MANIFEST = [
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.rightKey = exports.leftKey = void 0;
 __webpack_require__(/*! createjs */ "./node_modules/createjs/builds/1.0.0/createjs.min.js");
 const Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 const AssetManager_1 = __webpack_require__(/*! ./AssetManager */ "./src/AssetManager.ts");
@@ -1192,24 +1211,35 @@ let canvas;
 let assetManager;
 let player;
 let tile;
+let tile2;
+let tile3;
 let background;
 let spaceKey = false;
+exports.leftKey = false;
+exports.rightKey = false;
 function onReady(e) {
     console.log(">> spritesheet loaded – ready to add sprites to game");
     background = assetManager.getSprite("spritesB", "TilesetSpritesheet/Background/Background");
     stage.addChild(background);
     player = new Player_1.Player(stage, assetManager);
     player.showMe();
-    player.startMe();
     let xPos;
     let yPos;
-    for (let i = 0; i < Constants_1.TILE_MAX; i++) {
-        yPos = 660;
-        xPos = +64;
-        tile = new Tile_1.Tile(stage, xPos, yPos, assetManager);
-        tile.showMe();
-    }
+    yPos = 600;
+    xPos = 0;
+    tile = new Tile_1.Tile(stage, assetManager);
+    tile.positionMe(xPos, yPos);
+    tile.showMe();
+    xPos = xPos + 64;
+    tile2 = new Tile_1.Tile(stage, assetManager);
+    tile2.positionMe(xPos, yPos);
+    tile2.showMe();
+    xPos = xPos + 64;
+    tile3 = new Tile_1.Tile(stage, assetManager);
+    tile3.positionMe(xPos, yPos);
+    tile3.showMe();
     document.onkeydown = onKeyDown;
+    document.onkeyup = onKeyUp;
     createjs.Ticker.framerate = Constants_1.FRAME_RATE;
     createjs.Ticker.on("tick", onTick);
     console.log(">> game ready");
@@ -1217,17 +1247,45 @@ function onReady(e) {
 function onKeyDown(e) {
     if (e.key == " ")
         spaceKey = true;
+    else if (e.key == 'a')
+        exports.leftKey = true;
+    else if (e.key == 'd')
+        exports.rightKey = true;
+}
+function onKeyUp(e) {
+    if (e.key == " ")
+        spaceKey = false;
+    else if (e.key == 'a')
+        exports.leftKey = false;
+    else if (e.key == 'd')
+        exports.rightKey = false;
 }
 function monitorKeys() {
     if (spaceKey) {
-        console.log("jumping trigger");
         player.isJumping();
-        player.startMe();
         spaceKey = false;
     }
+    else if (exports.leftKey) {
+        player.direction = Player_1.Player.LEFT;
+        player.moveMe();
+        exports.leftKey = false;
+    }
+    else if (exports.rightKey) {
+        player.direction = Player_1.Player.RIGHT;
+        player.moveMe();
+        exports.rightKey = false;
+    }
+    else
+        player.stopMe();
 }
 function monitorCollisions() {
     if ((0, Toolkit_1.boxHit)(player.sprite, tile.sprite)) {
+        player.isGrounded();
+    }
+    else if ((0, Toolkit_1.boxHit)(player.sprite, tile2.sprite)) {
+        player.isGrounded();
+    }
+    else if ((0, Toolkit_1.boxHit)(player.sprite, tile3.sprite)) {
         player.isGrounded();
     }
 }
@@ -1264,27 +1322,47 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Player = void 0;
 const Character_1 = __webpack_require__(/*! ./Character */ "./src/Character.ts");
 const Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
+const Constants_2 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 class Player extends Character_1.Character {
     constructor(stage, assetManager) {
         super(stage, assetManager, "CharacterSpritesheet/Player/RightIdle");
         this._state = Character_1.Character.STATE_FALLING;
+        this._movingState = Character_1.Character.STATE_IDLE;
+        this._speed = 5;
         this.oneTime = true;
-        this.jumpSpeed = 10;
+        this.jumpStr = 20;
         this.resetTimer = 10;
         this.timer = this.resetTimer;
+        this.width = this._sprite.getBounds().width;
     }
     gravityMe() {
-        if (this.state == Character_1.Character.STATE_FALLING) {
+        if (this.state != Character_1.Character.STATE_GROUNDED)
             this._sprite.y = this._sprite.y + Constants_1.GRAVITY_POWER;
-        }
     }
     jump() {
         if (this.state == Character_1.Character.STATE_JUMPING) {
-            this._sprite.y = this._sprite.y - this.jumpSpeed;
+            this._sprite.y = this._sprite.y - this.jumpStr;
             this.timer = this.timer - 1;
             if (this.timer <= 0) {
                 this.timer = this.resetTimer;
                 this.isFalling();
+            }
+        }
+    }
+    move() {
+        if (this._movingState == Player.STATE_MOVING) {
+            let sprite = this._sprite;
+            if (this._direction == Player.LEFT) {
+                sprite.x = sprite.x - this._speed;
+                if (sprite.x < 0) {
+                    sprite.x = 0;
+                }
+            }
+            else if (this._direction == Player.RIGHT) {
+                sprite.x = sprite.x + this._speed;
+                if (sprite.x > (Constants_2.STAGE_WIDTH - this.width)) {
+                    sprite.x = (Constants_2.STAGE_WIDTH - this.width);
+                }
             }
         }
     }
@@ -1301,7 +1379,14 @@ class Player extends Character_1.Character {
             else if (this.state == Character_1.Character.STATE_FALLING) {
                 this._sprite.gotoAndPlay("CharacterSpritesheet/Player/Falling");
             }
-            this.oneTime = false;
+            if (this.direction == Character_1.Character.LEFT && this.state == Character_1.Character.STATE_GROUNDED) {
+                this._sprite.gotoAndPlay("CharacterSpritesheet/Player/Right");
+                this.oneTime = false;
+            }
+            else if (this.direction == Character_1.Character.RIGHT && this.state == Character_1.Character.STATE_GROUNDED) {
+                this._sprite.gotoAndPlay("CharacterSpritesheet/Player/Left");
+                this.oneTime = false;
+            }
         }
     }
     isGrounded() {
@@ -1326,7 +1411,9 @@ class Player extends Character_1.Character {
     update() {
         this.gravityMe();
         this.jump();
+        this.move();
         this.monitorAnimations();
+        console.log(this._state);
         super.update();
     }
 }
@@ -1347,11 +1434,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Tile = void 0;
 const Tileset_1 = __webpack_require__(/*! ./Tileset */ "./src/Tileset.ts");
 class Tile extends Tileset_1.Tileset {
-    constructor(stage, x, y, assetManager) {
-        super(stage, x, y, assetManager, "TilesetSpritesheet/Ground/TopMid");
+    constructor(stage, assetManager) {
+        super(stage, assetManager, "TilesetSpritesheet/Ground/TopMid");
+    }
+    positionMe(xPos, yPos) {
+        this._sprite.x = xPos;
+        this._sprite.y = yPos;
     }
     update() {
-        super.update();
     }
 }
 exports.Tile = Tile;
@@ -1370,9 +1460,9 @@ exports.Tile = Tile;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Tileset = void 0;
 class Tileset {
-    constructor(stage, x, y, assetManager, animation) {
+    constructor(stage, assetManager, animation) {
         this.stage = stage;
-        this._sprite = assetManager.getSprite("spritesB", animation, x, y);
+        this._sprite = assetManager.getSprite("spritesB", animation);
     }
     get sprite() {
         return this._sprite;
@@ -3802,7 +3892,7 @@ module.exports.formatError = function (err) {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("7c40ff8ac6f3fb38aff7")
+/******/ 		__webpack_require__.h = () => ("18995ff6a834e6f22ac6")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

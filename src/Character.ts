@@ -1,21 +1,28 @@
 import { AssetManager } from "./AssetManager";
+import { Player } from "./Player";
 
 export class Character {
-    // state class constants
-    public static STATE_IDLE_RIGHT:number = 1;
-    public static STATE_IDLE_LEFT:number = 2;
-    public static STATE_MOVING_RIGHT:number = 3;
-    public static STATE_MOVING_LEFT:number = 4;
-    public static STATE_JUMPING:number = 5;
-    public static STATE_FALLING:number = 6;
-    public static STATE_GROUNDED:number = 7;
-    public static STATE_DYING:number = 8;
-    public static STATE_DEAD:number = 9;
+    // class constants for readability
+    public static UP:number = 1;
+    public static DOWN:number = 2;
+    public static LEFT:number = 3;
+    public static RIGHT:number = 4;
 
+    // state class constants
+    public static STATE_IDLE:number = 1;
+    public static STATE_MOVING:number = 2;
+    public static STATE_JUMPING:number = 3;
+    public static STATE_FALLING:number = 4;
+    public static STATE_GROUNDED:number = 5;
+    public static STATE_DYING:number = 6;
+    public static STATE_DEAD:number = 7;
+    
     // protected property variables
     protected _speed:number;
     protected _sprite:createjs.Sprite;
     protected _state:number;
+    protected _movingState:number;
+    protected _direction:number;
 
     // protected variable
     protected stage:createjs.StageGL;
@@ -25,7 +32,7 @@ export class Character {
 
     constructor(stage:createjs.StageGL, assetManager:AssetManager, animation:string) {
         // initialization
-        this._state = Character.STATE_IDLE_RIGHT;
+        this._state = Character.STATE_IDLE;
         this.stage = stage;
         this.onGround = false;
 
@@ -41,7 +48,19 @@ export class Character {
         return this._speed;
     }
 
+    set direction(value:number) {
+        this._direction = value;
+    }
+
+    get direction() {
+        return this._direction;
+    }
+
     get state():number {
+        return this._state;
+    }
+
+    get movingState():number {
         return this._state;
     }
 
@@ -66,21 +85,28 @@ export class Character {
         this._sprite.rotation = degrees;
     }
 
-    public startMe():void {
+    public moveMe():void {
         if (this._state == Character.STATE_DEAD) return;
 
-        this._sprite.play();        
+        if (this._movingState = Character.STATE_IDLE){
+            this._movingState = Character.STATE_MOVING;
+            this._sprite.play();
+        }        
     }
 
     public stopMe():void {
         if (this._state == Character.STATE_DEAD) return;
 
-        this._sprite.stop();
-        // this._state = Character.STATE_IDLERIGHT;
+        if (this._movingState = Character.STATE_MOVING){
+            this._movingState = Character.STATE_IDLE;
+        this._movingState = Character.STATE_IDLE;
+            this._sprite.stop();
+        }        
     }
+    
 
     public update():void {
-        if ((this._state == Character.STATE_DEAD) || (this._state == Character.STATE_IDLE_RIGHT) || (this._state == Character.STATE_IDLE_LEFT)) return;
+        if ((this._state == Character.STATE_DEAD) || (this._state == Character.STATE_IDLE)) return;
 
     }
 

@@ -136,7 +136,7 @@
             <key>json</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>chacracterSprites.json</filename>
+                <filename>../../../Game/lib/CharacterSpritesheet/chacracterSprites.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -289,20 +289,6 @@
             </struct>
             <key type="filename">Player/Dying_1.png</key>
             <key type="filename">Player/Dying_2.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>-0.046875,0</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,11,32,22</rect>
-                <key>scale9Paddings</key>
-                <rect>16,11,32,22</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">Player/Dying_3.png</key>
             <key type="filename">Player/Dying_4.png</key>
             <key type="filename">Player/Dying_5.png</key>
@@ -371,7 +357,7 @@
             <key type="filename">Player/Right_8.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>-0.015625,0</point_f>
+                <point_f>0,0</point_f>
                 <key>spriteScale</key>
                 <double>1</double>
                 <key>scale9Enabled</key>
